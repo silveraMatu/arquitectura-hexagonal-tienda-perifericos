@@ -100,6 +100,12 @@ export class Cart {
     }
   }
 
+  /** Empties the cart's items and add-history, typically after a successful checkout. */
+  clear(): void {
+    this._items = [];
+    this._history = [];
+  }
+
   private findItem(productId: ProductId): CartItem | undefined {
     return this._items.find((item) => item.productId.equals(productId));
   }
