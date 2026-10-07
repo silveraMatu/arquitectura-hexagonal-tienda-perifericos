@@ -8,7 +8,7 @@ import { InsufficientStockError } from "../exceptions/InsufficientStockError.js"
 import { CartItemNotFoundError } from "../exceptions/CartItemNotFoundError.js";
 import { NoActionsToUndoError } from "../exceptions/NoActionsToUndoError.js";
 
-interface AddHistoryEntry {
+export interface AddHistoryEntry {
   productId: ProductId;
   quantityAdded: Quantity;
 }
@@ -23,6 +23,19 @@ export class Cart {
     this._id = id;
     this._items = [...items];
     this._history = [];
+  }
+
+  /** Reconstructs a Cart with a specific undo-history. Used only by persistence adapters
+   *  to restore state read from storage; use-cases must keep using `new Cart(id, items)`. */
+  static reconstitute(id: CartId, items: CartItem[] = [], history: AddHistoryEntry[] = []): Cart {
+    const cart = new Cart(id, items);
+    cart._history = [...history];
+    return cart;
+  }
+
+  /** Exposed only so persistence adapters can snapshot the undo stack when saving. */
+  getHistorySnapshot(): readonly AddHistoryEntry[] {
+    return [...this._history];
   }
 
   get id(): CartId {

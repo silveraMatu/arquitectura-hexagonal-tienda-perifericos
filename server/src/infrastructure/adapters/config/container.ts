@@ -1,6 +1,6 @@
-import { InMemoryProductRepository } from "../persistence/InMemoryProductRepository.js";
-import { InMemoryCartRepository } from "../persistence/InMemoryCartRepository.js";
-import { createSeedProducts } from "../persistence/seedProducts.js";
+import type { DataSource } from "typeorm";
+import { TypeOrmProductRepository } from "../persistence/typeorm/TypeOrmProductRepository.js";
+import { TypeOrmCartRepository } from "../persistence/typeorm/TypeOrmCartRepository.js";
 import { ListProductsUseCase } from "../../../application/use-cases/ListProductsUseCase.js";
 import { SearchProductsUseCase } from "../../../application/use-cases/SearchProductsUseCase.js";
 import { GetProductDetailUseCase } from "../../../application/use-cases/GetProductDetailUseCase.js";
@@ -16,9 +16,9 @@ export interface Container {
   cartController: CartController;
 }
 
-export function buildContainer(): Container {
-  const productRepository = new InMemoryProductRepository(createSeedProducts());
-  const cartRepository = new InMemoryCartRepository();
+export function buildContainer(dataSource: DataSource): Container {
+  const productRepository = new TypeOrmProductRepository(dataSource);
+  const cartRepository = new TypeOrmCartRepository(dataSource);
 
   const listProductsUseCase = new ListProductsUseCase(productRepository);
   const searchProductsUseCase = new SearchProductsUseCase(productRepository);
