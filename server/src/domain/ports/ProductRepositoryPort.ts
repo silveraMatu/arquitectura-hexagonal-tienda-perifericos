@@ -7,7 +7,6 @@ export interface ProductSearchCriteria {
   maxPrice?: number;
 }
 
-/** Output port the domain relies on to persist/retrieve Product aggregates. */
 export interface ProductRepositoryPort {
   findById(id: ProductId): Promise<Product | null>;
   findAll(): Promise<Product[]>;
